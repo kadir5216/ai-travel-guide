@@ -1,0 +1,74 @@
+[
+  {
+    "city": {
+      "name": "İstanbul",
+      "country": "Türkiye",
+      "short_info": "İki kıtayı birleştiren, tarihi ve kültürel zenginlikleriyle ünlü eşsiz metropol."
+    },
+    "places": [
+      {
+        "name": "Ayasofya Camii",
+        "description_tr": "Ayasofya, İstanbul'da yer alan tarihi bir ibadethane, eski bir bazilika ve müzedir. Dünya mimarlık tarihinin en önemli yapılarından biri olarak kabul edilir.",
+        "rating": 4.9
+      },
+      {
+        "name": "Galata Kulesi",
+        "description_tr": "İstanbul'un siluetini süsleyen, Cenevizliler döneminden kalma, şehri panoramik olarak görebileceğiniz tarihi kule.",
+        "rating": 4.7
+      },
+      {
+        "name": "Topkapı Sarayı",
+        "description_tr": "Osmanlı padişahlarının yüzyıllar boyunca idare merkezi ve ikametgahı olmuş, kutsal emanetleri barındıran muhteşem saray kompleksi.",
+        "rating": 4.8
+      }
+    ]
+  },
+  {
+    "city": {
+      "name": "Paris",
+      "country": "Fransa",
+      "short_info": "Sanat, moda, gastronomi ve kültürün küresel merkezi olan aşk ve ışık şehri."
+    },
+    "places": [
+      {
+        "name": "Eiffel Tower",
+        "description_tr": "Paris'in ve Fransa'nın sembolü olan, Gustave Eiffel tarafından inşa edilmiş 324 metre yüksekliğindeki demir kule.",
+        "rating": 4.8
+      },
+      {
+        "name": "Louvre Museum",
+        "description_tr": "Dünyanın en büyük sanat müzesi olan ve Mona Lisa gibi paha biçilemez sanat eserlerine ev sahipliği yapan tarihi saray.",
+        "rating": 4.9
+      },
+      {
+        "name": "Arc de Triomphe",
+        "description_tr": "Napolyon Savaşları'nda ölenler için inşa edilmiş, Şanzelize Caddesi'nin batı ucunda yer alan ünlü anıt kemer.",
+        "rating": 4.6
+      }
+    ]
+  },
+  {
+    "city": {
+      "name": "Londra",
+      "country": "Birleşik Krallık",
+      "short_info": "Tarihi sarayları, müzeleri, kırmızı çift katlı otobüsleri ve modern mimarisi ile ünlü kozmopolit başkent."
+    },
+    "places": [
+      {
+        "name": "Big Ben",
+        "description_tr": "Londra'daki Westminster Sarayı'nın yanındaki ünlü saat kulesinin çanına verilen ad olup, şehrin en ikonik simgesidir.",
+        "rating": 4.7
+      },
+      {
+        "name": "Tower Bridge",
+        "description_tr": "Thames Nehri üzerinde yer alan, kuleleri ve açılır kapanır mekanizmasıyla ünlü tarihi asma köprü.",
+        "rating": 4.8
+      },
+      {
+        "name": "Buckingham Palace",
+        "description_tr": "Birleşik Krallık hükümdarlarının Londra'daki resmi ikametgahı ve yönetim merkezi olan ihtişamlı saray.",
+        "rating": 4.7
+      }
+    ]
+  }
+]
