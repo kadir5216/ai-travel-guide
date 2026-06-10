@@ -5,6 +5,12 @@
 # GitHub repo'su bağlandığında otomatik olarak tüm servisleri oluşturur.
 # ============================================================
 
+databases:
+  - name: ai-travel-guide-db
+    plan: free
+    databaseName: strapi_db
+    user: strapi_user
+
 services:
   # ─────────────────────────────────────
   # 1. Strapi CMS Backend
@@ -27,7 +33,9 @@ services:
       - key: DATABASE_CLIENT
         value: postgres
       - key: DATABASE_URL
-        sync: false
+        fromDatabase:
+          name: ai-travel-guide-db
+          property: connectionString
       - key: APP_KEYS
         generateValue: true
       - key: API_TOKEN_SALT
