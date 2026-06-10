@@ -246,12 +246,17 @@ with st.spinner("Veriler yükleniyor..." if not is_en else "Loading data..."):
 
 # Handle connection error (None) vs empty data ([])
 if cities is None:
+    error_detail = getattr(client, "last_error", "")
     if is_en:
         st.error("⚠️ **Connection Error:** Cannot connect to Strapi API server.")
         st.info("Please make sure your Strapi CMS project is running at the configured URL.")
+        if error_detail:
+            st.code(error_detail)
     else:
         st.error("⚠️ **Bağlantı Hatası:** Strapi API sunucusuna bağlanılamıyor.")
         st.info("Lütfen Strapi CMS projenizin yapılandırılmış URL'de çalıştığından emin olun.")
+        if error_detail:
+            st.code(error_detail)
     st.stop()
 
 if not cities:

@@ -18,8 +18,9 @@ class StrapiClient:
     def __init__(self):
         api_url = os.getenv("STRAPI_URL", "").strip().rstrip("/")
         internal_hostport = os.getenv("STRAPI_INTERNAL_HOSTPORT", "").strip().rstrip("/")
+        self.last_error = ""
 
-        if not api_url and internal_hostport:
+        if internal_hostport and (not api_url or "localhost" in api_url or "127.0.0.1" in api_url):
             api_url = f"http://{internal_hostport}"
         elif not api_url:
             api_url = "http://localhost:1337"
@@ -32,6 +33,10 @@ class StrapiClient:
         if self.token:
             self.headers["Authorization"] = f"Bearer {self.token}"
 
+    def _set_error(self, message: str):
+        self.last_error = message
+        logger.error(message)
+
     def fetch_cities(self):
         """
         Fetches all cities from Strapi.
@@ -41,8 +46,15 @@ class StrapiClient:
         """
         url = f"{self.api_url}/api/cities"
         try:
+            self.last_error = ""
             logger.info("Fetching cities from Strapi...")
             response = requests.get(url, headers=self.headers, timeout=10)
+            if response.status_code == 403:
+                self._set_error(
+                    "Strapi API 403 Forbidden. Frontend STRAPI_API_TOKEN is missing, invalid, "
+                    "or does not have City find permission."
+                )
+                return None
             response.raise_for_status()
             res_data = response.json()
             
@@ -78,10 +90,13 @@ class StrapiClient:
             return parsed_cities
             
         except requests.exceptions.ConnectionError:
-            logger.error("Cannot connect to Strapi. Is the server running?")
+            self._set_error(
+                f"Cannot connect to Strapi at {self.api_url}. If this is Render, remove any "
+                "frontend STRAPI_URL value pointing to localhost or set it to the public Strapi URL."
+            )
             return None  # None = connection error (different from empty list)
         except Exception as e:
-            logger.error(f"Error fetching cities: {e}")
+            self._set_error(f"Error fetching cities from {url}: {e}")
             return None
 
     def fetch_places(self, city_id: int):
@@ -99,6 +114,7 @@ class StrapiClient:
         url = f"{self.api_url}/api/places"
 
         try:
+            self.last_error = ""
             logger.info(f"Fetching places for city ID {city_id} from Strapi...")
             response = None
             last_error = None
@@ -111,6 +127,12 @@ class StrapiClient:
                 response = requests.get(url, headers=self.headers, params=params, timeout=10)
                 if response.ok:
                     break
+                if response.status_code == 403:
+                    self._set_error(
+                        "Strapi API 403 Forbidden. Frontend STRAPI_API_TOKEN is missing, invalid, "
+                        "or does not have Place find permission."
+                    )
+                    return None
                 last_error = response
 
             if response is None or not response.ok:
@@ -175,10 +197,10 @@ class StrapiClient:
             return parsed_places
             
         except requests.exceptions.ConnectionError:
-            logger.error(f"Cannot connect to Strapi for places (city {city_id}).")
+            self._set_error(f"Cannot connect to Strapi for places at {self.api_url}.")
             return None
         except Exception as e:
-            logger.error(f"Error fetching places for city {city_id}: {e}")
+            self._set_error(f"Error fetching places for city {city_id}: {e}")
             return []
 
 if __name__ == "__main__":
