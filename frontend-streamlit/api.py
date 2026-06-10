@@ -103,8 +103,8 @@ class StrapiClient:
             response = None
             last_error = None
             filter_params = [
-                {"filters[cities][id][$eq]": city_id, "populate": "*"},
                 {"filters[city][id][$eq]": city_id, "populate": "*"},
+                {"filters[cities][id][$eq]": city_id, "populate": "*"},
             ]
 
             for params in filter_params:

@@ -68,6 +68,8 @@ services:
     envVars:
       - key: PYTHON_VERSION
         value: 3.11.12
+      - key: STRAPI_API_TOKEN
+        sync: false
       - key: STRAPI_INTERNAL_HOSTPORT
         fromService:
           name: ai-travel-guide-strapi

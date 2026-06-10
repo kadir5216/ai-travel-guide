@@ -61,11 +61,11 @@
         "images"
       ]
     },
-    "cities": {
+    "city": {
       "type": "relation",
-      "relation": "oneToMany",
+      "relation": "manyToOne",
       "target": "api::city.city",
-      "mappedBy": "place"
+      "inversedBy": "places"
     }
   }
 }

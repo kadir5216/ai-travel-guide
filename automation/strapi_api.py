@@ -209,13 +209,13 @@ class StrapiAPI:
             relation_filters = []
             if city_document_id and city_document_id != city_db_id:
                 relation_filters.extend([
-                    {"filters[cities][documentId][$eq]": city_document_id},
                     {"filters[city][documentId][$eq]": city_document_id},
+                    {"filters[cities][documentId][$eq]": city_document_id},
                 ])
             if city_db_id:
                 relation_filters.extend([
-                    {"filters[cities][id][$eq]": city_db_id},
                     {"filters[city][id][$eq]": city_db_id},
+                    {"filters[cities][id][$eq]": city_db_id},
                 ])
             # i18n-enabled relation filters can be strict; fall back to matching place names.
             relation_filters.append({})
@@ -245,8 +245,11 @@ class StrapiAPI:
                         "description_tr": description_tr,
                         "description_en": description_en,
                         "rating": rating,
+                        "city": {"connect": [city_relation_value]} if city_relation_value else None,
                     }
                 }
+                if payload["data"]["city"] is None:
+                    payload["data"].pop("city")
                 if image_id is not None:
                     payload["data"]["cover_image"] = image_id
                     
@@ -264,8 +267,11 @@ class StrapiAPI:
                             "description_tr": description_tr,
                             "description_en": description_en,
                             "rating": rating,
+                            "city": {"connect": [city_relation_value]} if city_relation_value else None,
                         }
                     }
+                    if payload["data"]["city"] is None:
+                        payload["data"].pop("city")
                     if image_id is not None:
                         payload["data"]["cover_image"] = image_id
                     json_headers = {**self.headers, "Content-Type": "application/json"}
@@ -288,11 +294,11 @@ class StrapiAPI:
                 "description_tr": description_tr,
                 "description_en": description_en,
                 "rating": rating,
-                "cities": {"connect": [city_relation_value]} if city_relation_value else None
+                "city": {"connect": [city_relation_value]} if city_relation_value else None
             }
         }
-        if payload["data"]["cities"] is None:
-            payload["data"].pop("cities")
+        if payload["data"]["city"] is None:
+            payload["data"].pop("city")
         
         if image_id:
             payload["data"]["cover_image"] = image_id

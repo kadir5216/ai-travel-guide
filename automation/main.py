@@ -9,8 +9,10 @@ from content_enricher import enrich_city_info, enrich_place_description
 from image_generator import generate_and_save_image
 from strapi_api import StrapiAPI
 
-# Load configuration from .env
-load_dotenv()
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+# Load configuration from automation/.env regardless of the current working directory.
+load_dotenv(os.path.join(BASE_DIR, ".env"))
 
 # Setup logger
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
@@ -34,7 +36,7 @@ def main():
     strapi = StrapiAPI(api_url, api_token)
     
     # Path to input JSON
-    data_path = os.path.join("data", "places.json")
+    data_path = os.path.join(BASE_DIR, "data", "places.json")
     if not os.path.exists(data_path):
         logger.error(f"Data file not found at path: {data_path}")
         return
@@ -111,7 +113,7 @@ def main():
                 desc_en = enriched_desc_tr
                 
             # 3. Generate image using Pollinations AI (with HuggingFace/picsum fallback)
-            local_image_path = generate_and_save_image(place_name, city_name, output_dir="images")
+            local_image_path = generate_and_save_image(place_name, city_name, output_dir=os.path.join(BASE_DIR, "images"))
             
             # 4. Upload image to Strapi Media Library
             image_id = None

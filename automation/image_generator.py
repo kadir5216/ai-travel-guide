@@ -191,6 +191,10 @@ def generate_and_save_image(place_name: str, city_name: str, output_dir: str = "
         
         filename = f"{slugify(city_name)}_{slugify(place_name)}.jpg"
         filepath = os.path.join(output_dir, filename)
+
+        if os.path.exists(filepath) and os.path.getsize(filepath) > 1000:
+            logger.info(f"Using existing generated image: {filepath}")
+            return os.path.abspath(filepath)
         
         # Build an English prompt for best AI results
         prompt = _build_prompt(place_name, city_name)

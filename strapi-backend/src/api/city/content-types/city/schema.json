@@ -66,11 +66,11 @@
         }
       }
     },
-    "place": {
+    "places": {
       "type": "relation",
-      "relation": "manyToOne",
+      "relation": "oneToMany",
       "target": "api::place.place",
-      "inversedBy": "cities"
+      "mappedBy": "city"
     }
   }
 }
