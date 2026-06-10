@@ -3,22 +3,22 @@
     "city": {
       "name": "İstanbul",
       "country": "Türkiye",
-      "short_info": "İki kıtayı birleştiren, tarihi ve kültürel zenginlikleriyle ünlü eşsiz metropol."
+      "short_info": "İstanbul, Asya ve Avrupa'yı birleştiren konumu, imparatorluklardan kalan mimari mirası ve canlı şehir kültürüyle dünyanın en etkileyici metropollerinden biridir. Tarihi yarımada, Boğaz kıyıları, müzeler, camiler ve hareketli sokak yaşamı şehri kısa bir gezide bile çok katmanlı bir deneyime dönüştürür."
     },
     "places": [
       {
         "name": "Ayasofya Camii",
-        "description_tr": "Ayasofya, İstanbul'da yer alan tarihi bir ibadethane, eski bir bazilika ve müzedir. Dünya mimarlık tarihinin en önemli yapılarından biri olarak kabul edilir.",
+        "description_tr": "Ayasofya Camii, İstanbul'un tarihi yarımadasında yer alan ve Bizans ile Osmanlı mirasını aynı yapı içinde hissettiren en önemli simgelerden biridir. 6. yüzyılda inşa edilen yapı, dev kubbesi, mermer sütunları, mozaikleri ve geniş iç hacmiyle mimarlık tarihinin dönüm noktalarından kabul edilir. Günümüzde ziyaretçiler hem ibadet atmosferini hem de yüzyıllar boyunca farklı medeniyetlerin bıraktığı sanat izlerini aynı anda görebilir.",
         "rating": 4.9
       },
       {
         "name": "Galata Kulesi",
-        "description_tr": "İstanbul'un siluetini süsleyen, Cenevizliler döneminden kalma, şehri panoramik olarak görebileceğiniz tarihi kule.",
+        "description_tr": "Galata Kulesi, İstanbul siluetinin en tanınan parçalarından biri olup Ceneviz döneminden günümüze ulaşan güçlü bir şehir gözlem noktasıdır. Kuleye çıkıldığında Haliç, Boğaz, tarihi yarımada ve modern İstanbul aynı panoramada görülebilir. Çevresindeki dar sokaklar, kafeler, tasarım dükkanları ve müzikli atmosfer burayı yalnızca bir seyir terası değil, keyifli bir yürüyüş rotası haline getirir.",
         "rating": 4.7
       },
       {
         "name": "Topkapı Sarayı",
-        "description_tr": "Osmanlı padişahlarının yüzyıllar boyunca idare merkezi ve ikametgahı olmuş, kutsal emanetleri barındıran muhteşem saray kompleksi.",
+        "description_tr": "Topkapı Sarayı, Osmanlı padişahlarının yüzyıllar boyunca yönetim merkezi ve yaşam alanı olmuş geniş bir saray kompleksidir. Avluları, hazine bölümü, kutsal emanetler dairesi, mutfakları ve Boğaz'a bakan teraslarıyla ziyaretçiye imparatorluk düzenini adım adım anlatır. Sarayı gezerken yalnızca mimariyi değil, Osmanlı saray yaşamını, diplomasi kültürünü ve İstanbul'un stratejik önemini de yakından görmek mümkündür.",
         "rating": 4.8
       }
     ]
@@ -27,22 +27,22 @@
     "city": {
       "name": "Paris",
       "country": "Fransa",
-      "short_info": "Sanat, moda, gastronomi ve kültürün küresel merkezi olan aşk ve ışık şehri."
+      "short_info": "Paris, sanat müzeleri, tarihi bulvarları, ikonik anıtları ve güçlü gastronomi kültürüyle Avrupa'nın en çok ziyaret edilen şehirlerinden biridir. Seine Nehri çevresindeki yürüyüş rotaları, klasik mimari dokusu ve dünya çapındaki kültür kurumları şehri romantik olduğu kadar öğretici bir gezi durağına dönüştürür."
     },
     "places": [
       {
         "name": "Eiffel Tower",
-        "description_tr": "Paris'in ve Fransa'nın sembolü olan, Gustave Eiffel tarafından inşa edilmiş 324 metre yüksekliğindeki demir kule.",
+        "description_tr": "Eyfel Kulesi, Paris'in ve Fransa'nın en bilinen simgesi olarak Champ de Mars üzerinde yükselen 324 metrelik demir bir mühendislik yapısıdır. Gustave Eiffel tarafından 1889 Dünya Fuarı için inşa edilen kule, ilk dönemlerinde tartışmalı bulunsa da zamanla modern Paris'in sembolüne dönüşmüştür. Seyir katlarından Seine Nehri, tarihi bulvarlar ve şehrin anıtları geniş bir açıyla izlenebilir; özellikle gün batımı ve gece ışıklandırması ziyaret için en etkileyici anlardandır.",
         "rating": 4.8
       },
       {
         "name": "Louvre Museum",
-        "description_tr": "Dünyanın en büyük sanat müzesi olan ve Mona Lisa gibi paha biçilemez sanat eserlerine ev sahipliği yapan tarihi saray.",
+        "description_tr": "Louvre Müzesi, eski bir kraliyet sarayından dönüştürülmüş ve bugün dünyanın en büyük sanat koleksiyonlarından birine ev sahipliği yapan dev bir kültür merkezidir. Mona Lisa, Venus de Milo ve Antik Mısır eserleri gibi dünya çapında tanınan parçaların yanında binlerce tablo, heykel ve arkeolojik eser görülebilir. Müze çok geniş olduğu için ziyaret öncesi rota belirlemek, hem zaman yönetimi hem de eserleri daha iyi anlamak açısından önemlidir.",
         "rating": 4.9
       },
       {
         "name": "Arc de Triomphe",
-        "description_tr": "Napolyon Savaşları'nda ölenler için inşa edilmiş, Şanzelize Caddesi'nin batı ucunda yer alan ünlü anıt kemer.",
+        "description_tr": "Arc de Triomphe, Şanzelize Caddesi'nin batı ucunda yer alan ve Fransız tarihindeki askeri zaferleri anmak için inşa edilmiş görkemli bir anıt kemerdir. Üzerindeki kabartmalar, isimler ve anma alanları Fransa'nın 19. yüzyıldaki politik ve askeri hafızasını yansıtır. Terasına çıkıldığında Paris'in yıldız biçimli cadde düzeni, Şanzelize ve Eyfel Kulesi etkileyici bir perspektifle görülebilir.",
         "rating": 4.6
       }
     ]
@@ -51,22 +51,22 @@
     "city": {
       "name": "Londra",
       "country": "Birleşik Krallık",
-      "short_info": "Tarihi sarayları, müzeleri, kırmızı çift katlı otobüsleri ve modern mimarisi ile ünlü kozmopolit başkent."
+      "short_info": "Londra, kraliyet yapıları, müzeleri, tiyatro kültürü, parkları ve çok kültürlü mahalleleriyle Avrupa'nın en hareketli başkentlerinden biridir. Thames Nehri boyunca uzanan tarihi simgeler, modern finans merkezi ve ücretsiz büyük müzeler şehri hem klasik hem çağdaş bir gezi deneyimi haline getirir."
     },
     "places": [
       {
         "name": "Big Ben",
-        "description_tr": "Londra'daki Westminster Sarayı'nın yanındaki ünlü saat kulesinin çanına verilen ad olup, şehrin en ikonik simgesidir.",
+        "description_tr": "Big Ben, Westminster Sarayı'nın yanında yükselen Elizabeth Tower içindeki ünlü çanın adıdır ve Londra'nın en tanınan sembollerinden biri olarak kabul edilir. Gotik mimarisi, saat yüzleri ve Parlamento binasıyla birlikte oluşturduğu siluet, İngiliz siyasi tarihinin güçlü bir görsel temsilidir. Thames kıyısından, Westminster Köprüsü'nden ve akşam saatlerinde ışıklandırma altında özellikle etkileyici fotoğraf noktaları sunar.",
         "rating": 4.7
       },
       {
         "name": "Tower Bridge",
-        "description_tr": "Thames Nehri üzerinde yer alan, kuleleri ve açılır kapanır mekanizmasıyla ünlü tarihi asma köprü.",
+        "description_tr": "Tower Bridge, Thames Nehri üzerinde yer alan, iki kuleli görünümü ve açılır kapanır yol mekanizmasıyla Londra'nın en karakteristik köprülerinden biridir. 19. yüzyıl sonlarında inşa edilen köprü, hem ulaşım işlevi hem de mühendislik mirası açısından önem taşır. Yaya geçitlerinden şehir manzarası izlenebilir; köprü içindeki sergi alanı ise yapının nasıl çalıştığını ve Londra liman tarihindeki rolünü anlatır.",
         "rating": 4.8
       },
       {
         "name": "Buckingham Palace",
-        "description_tr": "Birleşik Krallık hükümdarlarının Londra'daki resmi ikametgahı ve yönetim merkezi olan ihtişamlı saray.",
+        "description_tr": "Buckingham Sarayı, Birleşik Krallık hükümdarlarının Londra'daki resmi ikametgahı ve devlet törenlerinin en önemli merkezlerinden biridir. Sarayın dış cephesi, Victoria Anıtı ve geniş tören alanı kraliyet geleneğini yakından görmek isteyen ziyaretçiler için güçlü bir odak noktasıdır. Uygun dönemlerde izlenebilen nöbet değişimi töreni, müzik, üniforma ve koreografisiyle Londra gezisinin en klasik deneyimlerinden birini sunar.",
         "rating": 4.7
       }
     ]

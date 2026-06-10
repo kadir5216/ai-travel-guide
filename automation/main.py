@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 
 # Import our helper modules
 from translator import translate_text
+from content_enricher import enrich_city_info, enrich_place_description
 from image_generator import generate_and_save_image
 from strapi_api import StrapiAPI
 
@@ -62,9 +63,22 @@ def main():
             
         logger.info("\n" + "="*50 + f"\nProcessing City: {city_name} ({country})\n" + "="*50)
         
+        # Enrich city intro with AI, then translate it to English
+        enriched_short_info = enrich_city_info(city_name, country, short_info)
+        city_name_en = translate_text(city_name, source="tr", target="en") or city_name
+        country_en = translate_text(country, source="tr", target="en") or country
+        short_info_en = translate_text(enriched_short_info, source="tr", target="en") or enriched_short_info
+        
         # 1. Resolve City ID (Get or Create)
-        city_id = strapi.get_or_create_city(city_name, country, short_info)
-        if not city_id:
+        city_ref = strapi.get_or_create_city(
+            name=city_name,
+            name_en=city_name_en,
+            country=country,
+            country_en=country_en,
+            short_info=enriched_short_info,
+            short_info_en=short_info_en
+        )
+        if not city_ref:
             logger.error(f"Could not resolve City ID for '{city_name}'. Skipping all associated places...")
             continue
             
@@ -80,13 +94,23 @@ def main():
                 
             logger.info(f"\n--- Processing Place: {place_name} ---")
             
-            # 2. Translate Turkish description to English
-            desc_en = translate_text(desc_tr, source="tr", target="en")
+            # Determine appropriate names for Turkish and English contexts
+            is_turkish_context = (country.lower() == "türkiye" or country.lower() == "turkey")
+            if is_turkish_context:
+                name_tr = place_name
+                name_en = translate_text(place_name, source="tr", target="en") or place_name
+            else:
+                name_en = place_name
+                name_tr = translate_text(place_name, source="en", target="tr") or place_name
+            
+            # 2. Enrich Turkish description with AI, then translate it to English
+            enriched_desc_tr = enrich_place_description(place_name, city_name, country, desc_tr)
+            desc_en = translate_text(enriched_desc_tr, source="tr", target="en")
             if not desc_en:
                 logger.warning(f"Translation returned empty. Falling back to Turkish description.")
-                desc_en = desc_tr
+                desc_en = enriched_desc_tr
                 
-            # 3. Generate image using Pollinations AI
+            # 3. Generate image using Pollinations AI (with HuggingFace/picsum fallback)
             local_image_path = generate_and_save_image(place_name, city_name, output_dir="images")
             
             # 4. Upload image to Strapi Media Library
@@ -100,11 +124,12 @@ def main():
                 
             # 5. Create Place record in Strapi
             success = strapi.create_place(
-                name=place_name,
-                description_tr=desc_tr,
+                name=name_tr,
+                name_en=name_en,
+                description_tr=enriched_desc_tr,
                 description_en=desc_en,
                 rating=rating,
-                city_id=city_id,
+                city_ref=city_ref,
                 image_id=image_id
             )
             

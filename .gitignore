@@ -1,10 +1,30 @@
+# Python
 venv/
-.env
+.venv/
+env/
 **/__pycache__/
 *.pyc
+*.sqlite
+*.sqlite-journal
+*.db
+# Environment variables (NEVER commit real tokens!)
+.env
+!.env.example
+
+# Streamlit
 .streamlit/
+
+# IDE
 .idea/
 .vscode/
+
+# Node.js / Strapi
 node_modules/
 dist/
 build/
+.tmp/
+.cache/
+*.log
+
+# Generated images (local only)
+automation/images/
