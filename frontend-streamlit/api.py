@@ -28,7 +28,13 @@ class StrapiClient:
             api_url = f"https://{api_url}"
 
         self.api_url = api_url
-        self.token = os.getenv("STRAPI_API_TOKEN", "")
+        raw_token = os.getenv("STRAPI_API_TOKEN", "").strip().strip('"').strip("'")
+        if raw_token.startswith("STRAPI_API_TOKEN="):
+            raw_token = raw_token.split("=", 1)[1].strip().strip('"').strip("'")
+        if raw_token.lower().startswith("bearer "):
+            raw_token = raw_token[7:].strip()
+
+        self.token = "".join(raw_token.split())
         self.headers = {}
         if self.token:
             self.headers["Authorization"] = f"Bearer {self.token}"
