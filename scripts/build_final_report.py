@@ -5,8 +5,12 @@ import re
 from pathlib import Path
 
 from docx import Document
-from docx.enum.text import WD_BREAK
-from docx.shared import Inches, Pt
+from docx.enum.style import WD_STYLE_TYPE
+from docx.enum.table import WD_CELL_VERTICAL_ALIGNMENT, WD_TABLE_ALIGNMENT
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from docx.oxml import OxmlElement
+from docx.oxml.ns import qn
+from docx.shared import Inches, Pt, RGBColor
 from reportlab.lib import colors
 from reportlab.lib.enums import TA_CENTER
 from reportlab.lib.pagesizes import A4
@@ -96,22 +100,212 @@ def add_docx_text(doc: Document, text: str, style: str | None = None):
     return paragraph
 
 
+def set_cell_shading(cell, fill: str):
+    tc_pr = cell._tc.get_or_add_tcPr()
+    shading = tc_pr.find(qn("w:shd"))
+    if shading is None:
+        shading = OxmlElement("w:shd")
+        tc_pr.append(shading)
+    shading.set(qn("w:fill"), fill)
+
+
+def set_cell_width(cell, width_dxa: int):
+    tc_pr = cell._tc.get_or_add_tcPr()
+    tc_w = tc_pr.find(qn("w:tcW"))
+    if tc_w is None:
+        tc_w = OxmlElement("w:tcW")
+        tc_pr.append(tc_w)
+    tc_w.set(qn("w:w"), str(width_dxa))
+    tc_w.set(qn("w:type"), "dxa")
+
+
+def set_table_geometry(table, col_widths_dxa: list[int]):
+    tbl_pr = table._tbl.tblPr
+
+    tbl_w = tbl_pr.find(qn("w:tblW"))
+    if tbl_w is None:
+        tbl_w = OxmlElement("w:tblW")
+        tbl_pr.append(tbl_w)
+    tbl_w.set(qn("w:w"), "9360")
+    tbl_w.set(qn("w:type"), "dxa")
+
+    tbl_ind = tbl_pr.find(qn("w:tblInd"))
+    if tbl_ind is None:
+        tbl_ind = OxmlElement("w:tblInd")
+        tbl_pr.append(tbl_ind)
+    tbl_ind.set(qn("w:w"), "120")
+    tbl_ind.set(qn("w:type"), "dxa")
+
+    tbl_layout = tbl_pr.find(qn("w:tblLayout"))
+    if tbl_layout is None:
+        tbl_layout = OxmlElement("w:tblLayout")
+        tbl_pr.append(tbl_layout)
+    tbl_layout.set(qn("w:type"), "fixed")
+
+    tbl_cell_mar = tbl_pr.find(qn("w:tblCellMar"))
+    if tbl_cell_mar is None:
+        tbl_cell_mar = OxmlElement("w:tblCellMar")
+        tbl_pr.append(tbl_cell_mar)
+    for side in ("top", "bottom", "start", "end"):
+        element = tbl_cell_mar.find(qn(f"w:{side}"))
+        if element is None:
+            element = OxmlElement(f"w:{side}")
+            tbl_cell_mar.append(element)
+        element.set(qn("w:w"), "80" if side in {"top", "bottom"} else "120")
+        element.set(qn("w:type"), "dxa")
+
+    grid = table._tbl.tblGrid
+    if grid is None:
+        grid = OxmlElement("w:tblGrid")
+        table._tbl.insert(0, grid)
+    for child in list(grid):
+        grid.remove(child)
+    for width in col_widths_dxa:
+        grid_col = OxmlElement("w:gridCol")
+        grid_col.set(qn("w:w"), str(width))
+        grid.append(grid_col)
+
+    for row in table.rows:
+        for idx, cell in enumerate(row.cells):
+            set_cell_width(cell, col_widths_dxa[min(idx, len(col_widths_dxa) - 1)])
+            cell.vertical_alignment = WD_CELL_VERTICAL_ALIGNMENT.TOP
+
+
+def set_run_font(run, name: str):
+    run.font.name = name
+    run._element.rPr.rFonts.set(qn("w:eastAsia"), name)
+    run._element.rPr.rFonts.set(qn("w:cs"), name)
+
+
+def configure_docx_styles(doc: Document):
+    styles = doc.styles
+    normal = styles["Normal"]
+    normal.font.name = "Calibri"
+    normal.font.size = Pt(11)
+    normal.paragraph_format.space_before = Pt(0)
+    normal.paragraph_format.space_after = Pt(6)
+    normal.paragraph_format.line_spacing = 1.10
+
+    heading_tokens = [
+        ("Heading 1", 16, "2E74B5", 16, 8),
+        ("Heading 2", 13, "2E74B5", 12, 6),
+        ("Heading 3", 12, "1F4D78", 8, 4),
+    ]
+    for style_name, size, color, before, after in heading_tokens:
+        style = styles[style_name]
+        style.font.name = "Calibri"
+        style.font.size = Pt(size)
+        style.font.bold = True
+        style.font.color.rgb = RGBColor.from_string(color)
+        style.paragraph_format.space_before = Pt(before)
+        style.paragraph_format.space_after = Pt(after)
+        style.paragraph_format.line_spacing = 1.10
+
+    for style_name in ("List Bullet", "List Number"):
+        style = styles[style_name]
+        style.font.name = "Calibri"
+        style.font.size = Pt(11)
+        style.paragraph_format.left_indent = Inches(0.5)
+        style.paragraph_format.first_line_indent = Inches(-0.25)
+        style.paragraph_format.space_after = Pt(8)
+        style.paragraph_format.line_spacing = 1.167
+
+    code_style = styles["CodeBlock"] if "CodeBlock" in styles else styles.add_style("CodeBlock", WD_STYLE_TYPE.PARAGRAPH)
+    code_style.font.name = "Consolas"
+    code_style.font.size = Pt(7)
+    code_style.paragraph_format.space_before = Pt(3)
+    code_style.paragraph_format.space_after = Pt(6)
+    code_style.paragraph_format.left_indent = Inches(0.08)
+    code_style.paragraph_format.right_indent = Inches(0.08)
+    code_style.paragraph_format.line_spacing = 1.0
+
+    callout_style = styles["Callout"] if "Callout" in styles else styles.add_style("Callout", WD_STYLE_TYPE.PARAGRAPH)
+    callout_style.font.name = "Calibri"
+    callout_style.font.size = Pt(10)
+    callout_style.font.italic = True
+    callout_style.font.color.rgb = RGBColor.from_string("1F3A5F")
+    callout_style.paragraph_format.space_before = Pt(4)
+    callout_style.paragraph_format.space_after = Pt(6)
+
+
+def setup_docx_page(doc: Document):
+    section = doc.sections[0]
+    section.page_width = Inches(8.5)
+    section.page_height = Inches(11)
+    section.top_margin = Inches(1)
+    section.bottom_margin = Inches(1)
+    section.left_margin = Inches(1)
+    section.right_margin = Inches(1)
+    section.header_distance = Inches(0.492)
+    section.footer_distance = Inches(0.492)
+
+    footer = section.footer.paragraphs[0]
+    footer.alignment = WD_ALIGN_PARAGRAPH.RIGHT
+    footer.text = "Dünyayi Gezayisun AI Rehberuylan"
+    for run in footer.runs:
+        set_run_font(run, "Calibri")
+        run.font.size = Pt(8)
+        run.font.color.rgb = RGBColor.from_string("666666")
+
+
+def style_screenshot_placeholder(paragraph):
+    if "Eklenmesi gereken ekran görüntüsü:" not in paragraph.text:
+        return
+    paragraph.style = "Callout"
+    paragraph.paragraph_format.left_indent = Inches(0.18)
+    paragraph.paragraph_format.right_indent = Inches(0.18)
+
+
+def add_code_block(doc: Document, code: str):
+    paragraph = doc.add_paragraph(style="CodeBlock")
+    run = paragraph.add_run(code)
+    set_run_font(run, "Consolas")
+    run.font.size = Pt(6.6 if len(code.splitlines()) > 80 else 7.4)
+    paragraph.paragraph_format.keep_together = False
+    return paragraph
+
+
+def add_formatted_table(doc: Document, header: list[str], rows: list[list[str]]):
+    table = doc.add_table(rows=1, cols=len(header))
+    table.alignment = WD_TABLE_ALIGNMENT.LEFT
+    table.autofit = False
+    table.style = "Table Grid"
+
+    col_width = 9360 // max(1, len(header))
+    col_widths = [col_width] * len(header)
+    col_widths[-1] += 9360 - sum(col_widths)
+
+    for idx, cell in enumerate(table.rows[0].cells):
+        cell.text = clean_inline_markdown(header[idx])
+        set_cell_shading(cell, "F2F4F7")
+        for paragraph in cell.paragraphs:
+            for run in paragraph.runs:
+                set_run_font(run, "Calibri")
+                run.bold = True
+                run.font.size = Pt(10.5)
+                run.font.color.rgb = RGBColor.from_string("0B2545")
+
+    for row in rows:
+        cells = table.add_row().cells
+        for idx, cell in enumerate(cells):
+            cell.text = clean_inline_markdown(row[idx] if idx < len(row) else "")
+            for paragraph in cell.paragraphs:
+                paragraph.paragraph_format.space_after = Pt(3)
+                for run in paragraph.runs:
+                    set_run_font(run, "Calibri")
+                    run.font.size = Pt(10)
+
+    set_table_geometry(table, col_widths)
+    doc.add_paragraph()
+    return table
+
+
 def create_docx(markdown_text: str):
     doc = Document()
-    section = doc.sections[0]
-    section.top_margin = Inches(0.75)
-    section.bottom_margin = Inches(0.75)
-    section.left_margin = Inches(0.8)
-    section.right_margin = Inches(0.8)
+    setup_docx_page(doc)
+    configure_docx_styles(doc)
 
-    styles = doc.styles
-    styles["Normal"].font.name = "Arial"
-    styles["Normal"].font.size = Pt(10)
-    for style_name, size in [("Heading 1", 18), ("Heading 2", 14), ("Heading 3", 12)]:
-        styles[style_name].font.name = "Arial"
-        styles[style_name].font.size = Pt(size)
-        styles[style_name].font.bold = True
-
+    first_heading = True
     for item in parse_markdown_lines(markdown_text):
         kind = item[0]
         if kind == "line":
@@ -121,36 +315,40 @@ def create_docx(markdown_text: str):
             if line == "---":
                 doc.add_page_break()
             elif line.startswith("# "):
-                doc.add_heading(clean_inline_markdown(line[2:]), level=1)
+                text = clean_inline_markdown(line[2:])
+                paragraph = doc.add_heading(text, level=1)
+                if first_heading:
+                    paragraph.alignment = WD_ALIGN_PARAGRAPH.CENTER
+                    paragraph.paragraph_format.space_before = Pt(96)
+                    paragraph.paragraph_format.space_after = Pt(24)
+                    for run in paragraph.runs:
+                        set_run_font(run, "Calibri")
+                        run.font.size = Pt(22)
+                        run.font.color.rgb = RGBColor.from_string("1F4D78")
+                    first_heading = False
             elif line.startswith("## "):
-                doc.add_heading(clean_inline_markdown(line[3:]), level=2)
+                text = clean_inline_markdown(line[3:])
+                if text.startswith("Ek - "):
+                    doc.add_page_break()
+                doc.add_heading(text, level=2)
             elif line.startswith("### "):
                 doc.add_heading(clean_inline_markdown(line[4:]), level=3)
             elif line.startswith("- "):
-                add_docx_text(doc, line[2:], "List Bullet")
+                paragraph = add_docx_text(doc, line[2:], "List Bullet")
+                style_screenshot_placeholder(paragraph)
             elif re.match(r"^\d+\.\s", line):
                 add_docx_text(doc, re.sub(r"^\d+\.\s", "", line), "List Number")
             elif line.startswith("> "):
                 add_docx_text(doc, line[2:], "Intense Quote")
             else:
-                add_docx_text(doc, line)
+                paragraph = add_docx_text(doc, line)
+                style_screenshot_placeholder(paragraph)
         elif kind == "code":
             _, lang, code = item
-            paragraph = doc.add_paragraph()
-            run = paragraph.add_run(code)
-            run.font.name = "Courier New"
-            run.font.size = Pt(7.5 if len(code.splitlines()) > 80 else 8.5)
+            add_code_block(doc, code)
         elif kind == "table":
             _, header, rows = item
-            table = doc.add_table(rows=1, cols=len(header))
-            table.style = "Table Grid"
-            for idx, cell in enumerate(header):
-                table.rows[0].cells[idx].text = clean_inline_markdown(cell)
-            for row in rows:
-                cells = table.add_row().cells
-                for idx, cell in enumerate(row[: len(header)]):
-                    cells[idx].text = clean_inline_markdown(cell)
-            doc.add_paragraph()
+            add_formatted_table(doc, header, rows)
 
     doc.save(DOCX_OUT)
 
