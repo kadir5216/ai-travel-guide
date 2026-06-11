@@ -1,4 +1,4 @@
-# Final Sınavı Proje Raporu: YZ Destekli Gezi Rehberi
+# Final Sınavı Proje Raporu: Dünyayi Gezayisun AI Rehberuylan
 
 ## Sistem Mimarisi Şeması
 

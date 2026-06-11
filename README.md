@@ -1,4 +1,4 @@
-# YZ Destekli Gezi Rehberi (AI Travel Guide)
+# Dünyayi Gezayisun AI Rehberuylan
 
 Bu proje, yapay zeka destekli ve çok dilli çalışan modern bir gezi rehberi sistemidir. Dünyanın farklı şehirleri için gezi rehberi verilerini bir araya getiren, yapay zeka ile açıklama çevirilerini ve mekan görsellerini zenginleştiren, çok dilli (Türkçe ve İngilizce) olarak saklayan ve kullanıcıya modern bir Streamlit arayüzü ile sunan tam çalışan bir sistemdir.
 

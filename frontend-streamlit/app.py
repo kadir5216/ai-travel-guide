@@ -13,7 +13,7 @@ def safe_text(value) -> str:
 
 # Set Streamlit Page Configuration
 st.set_page_config(
-    page_title="AI Travel Guide | YZ Destekli Gezi Rehberi",
+    page_title="Dünyayi Gezayisun AI Rehberuylan",
     page_icon="🗺️",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -213,7 +213,7 @@ lang_option = st.sidebar.selectbox(
 is_en = (lang_option == "EN (English)")
 
 # Translate Header Strings
-main_title = "AI-Powered Travel Guide" if is_en else "YZ Destekli Gezi Rehberi"
+main_title = "Dünyayi Gezayisun AI Rehberuylan"
 subtitle = "AI-Powered Multilingual Travel Guide & Place Explorer" if is_en else "Yapay Zeka Destekli Çok Dilli Gezi Rehberi & Mekan Kaşifi"
 
 # Main Title Header
@@ -415,7 +415,7 @@ else:
                 st.markdown("<div style='height: 15px;'></div>", unsafe_allow_html=True)
 
 # Footer info
-footer_text = "AI Travel Guide Project • Developed with Python, Streamlit & Strapi CMS." if is_en else "YZ Destekli Gezi Rehberi Final Projesi • Python, Streamlit & Strapi CMS ile geliştirilmiştir."
+footer_text = "Dünyayi Gezayisun AI Rehberuylan • Developed with Python, Streamlit & Strapi CMS." if is_en else "Dünyayi Gezayisun AI Rehberuylan • Python, Streamlit & Strapi CMS ile geliştirilmiştir."
 st.markdown(f"""
 <div class="footer">
     <p>{footer_text}</p>
